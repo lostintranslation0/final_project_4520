@@ -22,13 +22,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="681dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/darkModeSwitch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_profile">
@@ -96,4 +96,15 @@
             android:text="Upload New Profile Picture" />
 
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/darkModeSwitch"
+        android:layout_width="127dp"
+        android:layout_height="43dp"
+        android:gravity="center"
+        android:text="Dark Mode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
