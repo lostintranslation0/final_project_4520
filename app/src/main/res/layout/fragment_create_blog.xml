@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.blogs.CreateBlogFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/createBlogTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Create Blog"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+            <EditText
+                android:id="@+id/createBlogTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:ems="10"
+                android:hint="Title:"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/createBlogContentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="196dp"
+                android:ems="10"
+                android:hint="Content:"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/createBlogUploadPicturesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Pictures" />
+
+            <Switch
+                android:id="@+id/createBlogEnableCommentsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Disable Comments" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

@@ -46,6 +46,47 @@
         android:text="Register!"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regUploadPictureButton" />
+
+    <EditText
+        android:id="@+id/regDisplayNameEditText"
+        android:layout_width="300dp"
+        android:layout_height="69dp"
+        android:ems="10"
+        android:hint="Display Name:"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/regPasswordEditText" />
+
+    <EditText
+        android:id="@+id/regAgeEditText"
+        android:layout_width="301dp"
+        android:layout_height="67dp"
+        android:ems="10"
+        android:hint="Age:"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regDisplayNameEditText" />
+
+    <Button
+        android:id="@+id/regTakePictureButton"
+        android:layout_width="168dp"
+        android:layout_height="53dp"
+        android:text="Take Picture"
+        app:layout_constraintEnd_toStartOf="@+id/regUploadPictureButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regAgeEditText" />
+
+    <Button
+        android:id="@+id/regUploadPictureButton"
+        android:layout_width="168dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:text="Upload Picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regAgeEditText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
