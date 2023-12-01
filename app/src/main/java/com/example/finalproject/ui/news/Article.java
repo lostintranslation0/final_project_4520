@@ -2,9 +2,19 @@ package com.example.finalproject.ui.news;
 
 public class Article {
     private String title;
-    private String author;
+    private String section;
+    private String published_date;
 
-    private String datePublished;
+    public String getTitle() {
+        return title;
+    }
 
-    private String content;
+    public String getSection() {
+        return section;
+    }
+
+    public String getPublished_date() {
+        return published_date;
+    }
+
 }

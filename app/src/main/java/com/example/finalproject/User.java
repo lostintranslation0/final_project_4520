@@ -2,6 +2,8 @@ package com.example.finalproject;
 
 import com.example.finalproject.ui.blogs.Blog;
 
+import java.util.List;
+
 public class User {
     private String username;
     private String password;

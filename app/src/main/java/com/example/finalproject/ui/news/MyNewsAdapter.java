@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
-import com.example.finalproject.ui.blogs.Blog;
-import com.example.finalproject.ui.blogs.MyBlogsAdapter;
 
 import java.util.List;
 
@@ -25,12 +23,12 @@ public class MyNewsAdapter extends RecyclerView.Adapter<MyNewsAdapter.ArticleVie
     @NonNull
     @Override
     public ArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.blog_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item, parent, false);
         return new ArticleViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyNewsAdapter.ArticleViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ArticleViewHolder holder, int position) {
         Article data = dataList.get(position);
         holder.bind(data);
     }
@@ -40,26 +38,26 @@ public class MyNewsAdapter extends RecyclerView.Adapter<MyNewsAdapter.ArticleVie
         return dataList.size();
     }
 
-    public void setDataList(List<Article> articles)
-    {
+    public void setDataList(List<Article> articles) {
         this.dataList = articles;
         notifyDataSetChanged();
     }
 
     public static class ArticleViewHolder extends RecyclerView.ViewHolder {
 
-        // Add your item views here
-        private TextView textView;
+        private TextView newsTitle, newsSection, newsDate;
 
         public ArticleViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Initialize your item views here
-            textView = itemView.findViewById(R.id.textView);
+            newsTitle = itemView.findViewById(R.id.newsTitle);
+            newsSection = itemView.findViewById(R.id.newsSection);
+            newsDate = itemView.findViewById(R.id.newsDate);
         }
 
         public void bind(Article data) {
-            // Bind data to your item views here
-            textView.setText("hi");
+            newsTitle.setText(data.getTitle());
+            newsSection.setText(data.getSection());
+            newsDate.setText(data.getPublished_date());
         }
     }
 }

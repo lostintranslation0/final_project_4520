@@ -6,87 +6,100 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="218dp"
-        android:layout_height="70dp"
-        android:gravity="center"
-        android:text="Register"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/regUsernameEditText"
-        android:layout_width="297dp"
-        android:layout_height="84dp"
-        android:ems="10"
-        android:hint="Username (email):"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Register"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    <EditText
-        android:id="@+id/regPasswordEditText"
-        android:layout_width="297dp"
-        android:layout_height="82dp"
-        android:ems="10"
-        android:hint="Password:"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regUsernameEditText" />
+        <EditText
+            android:id="@+id/regUsernameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="text" />
 
-    <Button
-        android:id="@+id/registerUserButton"
-        android:layout_width="190dp"
-        android:layout_height="81dp"
-        android:text="Register!"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regUploadPictureButton" />
+        <EditText
+            android:id="@+id/regPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/regDisplayNameEditText"
-        android:layout_width="300dp"
-        android:layout_height="69dp"
-        android:ems="10"
-        android:hint="Display Name:"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regPasswordEditText" />
+        <EditText
+            android:id="@+id/regDisplayNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Display Name"
+            android:inputType="text" />
 
-    <EditText
-        android:id="@+id/regAgeEditText"
-        android:layout_width="301dp"
-        android:layout_height="67dp"
-        android:ems="10"
-        android:hint="Age:"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regDisplayNameEditText" />
+        <EditText
+            android:id="@+id/regAgeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:ems="10"
+            android:hint="Age"
+            android:inputType="text" />
 
-    <Button
-        android:id="@+id/regTakePictureButton"
-        android:layout_width="168dp"
-        android:layout_height="53dp"
-        android:text="Take Picture"
-        app:layout_constraintEnd_toStartOf="@+id/regUploadPictureButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regAgeEditText" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/regUploadPictureButton"
-        android:layout_width="168dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="16dp"
-        android:text="Upload Picture"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/regAgeEditText" />
+            <Button
+                android:id="@+id/regTakePictureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="TakePicture"
+                android:text="Take Picture" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20sp" />
+
+            <Button
+                android:id="@+id/regUploadPictureButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="UploadPicture"
+                android:text="Upload Picture" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageViewRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <Button
+            android:id="@+id/registerUserButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,15 +1,14 @@
 package com.example.finalproject;
 
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.finalproject.databinding.ActivityHomeBinding;
 
 public class HomeActivity extends AppCompatActivity {
@@ -23,16 +22,12 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.myToolbar);
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_news, R.id.navigation_blogs, R.id.navigation_profile)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_news);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        // Removed the setupActionBarWithNavController line
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
