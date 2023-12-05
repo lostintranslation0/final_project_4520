@@ -1,9 +1,11 @@
 package com.example.finalproject.ui.news;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +40,7 @@ public class NewsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         NewsViewModel newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
 
@@ -47,16 +50,16 @@ public class NewsFragment extends Fragment {
         // Initialize RecyclerView
         myRecyclerView = binding.articlesRecyclerView;
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyNewsAdapter(new ArrayList<>()); // Initially empty list
+        adapter = new MyNewsAdapter(new ArrayList<>());
         myRecyclerView.setAdapter(adapter);
 
-        // Initialize Retrofit and fetch data
-        Retrofit retrofit = new Retrofit.Builder()
+        // Initialize Retrofit for top stories
+        Retrofit retrofitTopStories = new Retrofit.Builder()
                 .baseUrl("https://api.nytimes.com/svc/topstories/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        apiService = retrofit.create(NewsApiService.class);
+        apiService = retrofitTopStories.create(NewsApiService.class);
         fetchData();
 
         return root;
@@ -78,15 +81,62 @@ public class NewsFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     adapter.setDataList(response.body().getResults());
                 } else {
-                    // Handle errors
+                    Log.e("NewsFragment", "fetchData - Response not successful: " + response.errorBody());
                 }
             }
 
             @Override
             public void onFailure(Call<TopStoriesResponse> call, Throwable t) {
-                // Handle network failure
+                Log.e("NewsFragment", "fetchData - Network call failed: " + t.getMessage(), t);
             }
         });
+    }
+
+    private void fetchPopularArticles() {
+        Retrofit retrofitPopularArticles = new Retrofit.Builder()
+                .baseUrl("https://api.nytimes.com/svc/mostpopular/v2/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        NewsApiService apiService = retrofitPopularArticles.create(NewsApiService.class);
+        apiService.getEmailedArticles(7, "R8rM0UVXsNLLLjtVZqUi149Kyl8Yfmez").enqueue(new Callback<PopularArticlesResponse>() {
+            @Override
+            public void onResponse(Call<PopularArticlesResponse> call, Response<PopularArticlesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    adapter.setDataList(response.body().getResults());
+                } else {
+                    Log.e("NewsFragment", "fetchPopularArticles - Response not successful: " + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PopularArticlesResponse> call, Throwable t) {
+                Log.e("NewsFragment", "fetchPopularArticles - Network call failed: " + t.getMessage(), t);
+            }
+        });
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_news, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.searchPopularArticles) {
+            fetchPopularArticles();
+            return true;
+        }
+        else if (id == R.id.searchTopStories) {
+            fetchData();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -94,11 +144,4 @@ public class NewsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_news, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
 }
