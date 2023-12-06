@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +17,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalproject.ArticleDetailActivity;
 import com.example.finalproject.R;
 import com.example.finalproject.api.NewsApiService;
 import com.example.finalproject.databinding.FragmentNewsBinding;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +55,7 @@ public class NewsFragment extends Fragment {
         // Initialize RecyclerView
         myRecyclerView = binding.articlesRecyclerView;
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyNewsAdapter(new ArrayList<>());
+        adapter = new MyNewsAdapter(new ArrayList<>(), this::onArticleClicked);
         myRecyclerView.setAdapter(adapter);
 
         // Initialize Retrofit for top stories
@@ -63,6 +68,12 @@ public class NewsFragment extends Fragment {
         fetchData();
 
         return root;
+    }
+
+    private void onArticleClicked(Article article) {
+        Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
+        intent.putExtra("ARTICLE_DATA", article); // Make sure Article is Serializable or Parcelable
+        startActivity(intent);
     }
 
     @Override
@@ -79,7 +90,8 @@ public class NewsFragment extends Fragment {
             @Override
             public void onResponse(Call<TopStoriesResponse> call, Response<TopStoriesResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    adapter.setDataList(response.body().getResults());
+                    List<Article> articles = response.body().getResults();
+                    adapter.setDataList(articles);
                 } else {
                     Log.e("NewsFragment", "fetchData - Response not successful: " + response.errorBody());
                 }
@@ -91,6 +103,7 @@ public class NewsFragment extends Fragment {
             }
         });
     }
+
 
     private void fetchPopularArticles() {
         Retrofit retrofitPopularArticles = new Retrofit.Builder()

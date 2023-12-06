@@ -15,9 +15,15 @@ import java.util.List;
 public class MyNewsAdapter extends RecyclerView.Adapter<MyNewsAdapter.ArticleViewHolder> {
 
     private List<Article> dataList;
+    private OnItemClickListener listener;
 
-    public MyNewsAdapter(List<Article> dataList) {
+    public interface OnItemClickListener {
+        void onItemClick(Article article);
+    }
+
+    public MyNewsAdapter(List<Article> dataList, OnItemClickListener listener) {
         this.dataList = dataList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,7 +36,7 @@ public class MyNewsAdapter extends RecyclerView.Adapter<MyNewsAdapter.ArticleVie
     @Override
     public void onBindViewHolder(@NonNull ArticleViewHolder holder, int position) {
         Article data = dataList.get(position);
-        holder.bind(data);
+        holder.bind(data, listener);
     }
 
     @Override
@@ -54,10 +60,16 @@ public class MyNewsAdapter extends RecyclerView.Adapter<MyNewsAdapter.ArticleVie
             newsDate = itemView.findViewById(R.id.newsDate);
         }
 
-        public void bind(Article data) {
+        public void bind(Article data, OnItemClickListener listener) {
             newsTitle.setText(data.getTitle());
             newsSection.setText(data.getSection());
             newsDate.setText(data.getPublished_date());
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(data);
+                }
+            });
         }
     }
 }
