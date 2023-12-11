@@ -8,11 +8,21 @@ public class User {
     private String username;
     private String password;
     private int age;
-    public List<Blog> getUserBlogs()
-    {
+    private String imageUrl;
+
+    public List<Blog> getUserBlogs() {
         return null;
     }
+
     public List<String> getUserFollowers() {
         return null;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

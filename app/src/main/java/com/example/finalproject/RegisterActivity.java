@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,15 +23,24 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.UUID;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuthentication auth;
-
-
     EditText usernameEditText;
     EditText passwordEditText;
     Button registerButton;
+    private Uri imageUri; // Add this line
+
 
     private static final int OPEN_REQUEST_CODE = 102;
     private static final int PHOTO_REQUEST_CODE = 101;
@@ -64,6 +76,10 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "Registration successful",
                                     Toast.LENGTH_SHORT).show();
 
+                            if (imageUri != null) {
+                                uploadImageToFirebase(imageUri);
+                            }
+
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
@@ -76,6 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
             }
         });
+
 
     }
 
@@ -108,13 +125,68 @@ public class RegisterActivity extends AppCompatActivity {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 imageView.setImageBitmap(imageBitmap);
+                // Convert bitmap to Uri and store it
+                imageUri = getImageUri(getApplicationContext(), imageBitmap);
             } else if (requestCode == OPEN_REQUEST_CODE) {
                 // Handle gallery image
-                Uri imageUri = data.getData();
+                imageUri = data.getData();
                 imageView.setImageURI(imageUri);
             }
         }
     }
+
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        Log.d("UploadImage", "Attempting to upload image");
+        if (imageUri == null) {
+            Log.d("UploadImage", "Image URI is null");
+            return;
+        }
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("user_images/" + UUID.randomUUID().toString());
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        Log.d("UploadImage", "Image uploaded successfully. URL: " + imageUrl);
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                        // Set the imageUrl field of the user object
+                        User user = new User();
+                        user.setImageUrl(imageUrl);
+
+                        // Storing the user object in Firestore with the imageUrl field
+                        FirebaseFirestore.getInstance().collection("users").document(userId).set(user)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Log success
+                                    Log.d("DatabaseUpdate", "User object with Image URL stored successfully in database for user: " + userId);
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Log failure
+                                    Log.e("DatabaseUpdate", "Failed to store user object with Image URL in database: " + e.getMessage(), e);
+                                });
+
+                        Log.d("DatabaseUpdate", "Set value called for user: " + userId + " with Image URL: " + imageUrl);
+
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("UploadImage", "Image upload failed: " + e.getMessage(), e);
+                    Toast.makeText(RegisterActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+
+
+    private Uri getImageUri(Context inContext, Bitmap inImage) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Image Title");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Image Title", null);
+        return Uri.parse(path);
+    }
+
 
 
 }

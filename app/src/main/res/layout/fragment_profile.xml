@@ -6,80 +6,80 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
-    <TextView
-        android:id="@+id/text_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Profile"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/darkModeSwitch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_profile">
+        android:padding="10sp">
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:src="@tools:sample/avatars" />
+            android:layout_marginBottom="10sp"
+            android:text="Profile"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textSize="30dp" />
 
-        <Button
-            android:id="@+id/profileViewFollowersButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="View Followers" />
+            android:layout_marginBottom="10sp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/profileMyBlogsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="My Blogs" />
+            <ImageView
+                android:id="@+id/profileFragmentImage"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
+                tools:src="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/profileViewFollowersButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View Followers" />
+
+                <Button
+                    android:id="@+id/profileMyBlogsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="My Blogs" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/updateProfileTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:text="Update Profile:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
             android:id="@+id/profileEmailEditText"
             android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:ems="10"
+            android:layout_height="wrap_content"
             android:hint="New Email:"
             android:inputType="text" />
 
         <EditText
             android:id="@+id/profilePasswordEditText"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:ems="10"
+            android:layout_height="wrap_content"
             android:hint="New Password:"
             android:inputType="text" />
 
         <EditText
             android:id="@+id/profileAgeEditText"
             android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:ems="10"
+            android:layout_height="wrap_content"
             android:hint="Update Age:"
             android:inputType="text" />
 
@@ -93,18 +93,22 @@
             android:id="@+id/uploadNewProfilePicButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20sp"
             android:text="Upload New Profile Picture" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/saveProfileChanges"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
 
-    <Switch
-        android:id="@+id/darkModeSwitch"
-        android:layout_width="127dp"
-        android:layout_height="43dp"
-        android:gravity="center"
-        android:text="Dark Mode"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Switch
+            android:id="@+id/darkModeSwitch"
+            android:layout_width="127dp"
+            android:gravity="center"
+            android:text="Dark Mode"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
