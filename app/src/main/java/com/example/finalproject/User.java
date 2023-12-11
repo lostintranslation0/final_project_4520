@@ -10,6 +10,8 @@ public class User {
     private int age;
     private List<String> followers;
 
+    public User() {}
+
     public User(String username, String password, int age) {
         this.username = username;
         this.password = password;
@@ -46,5 +48,20 @@ public class User {
 
     public void setFollowers(List<String> followers) {
         this.followers = followers;
+    }
+
+    private String imageUrl;
+
+
+    public List<String> getUserFollowers() {
+        return null;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
