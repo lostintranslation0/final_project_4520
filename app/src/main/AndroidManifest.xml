@@ -16,10 +16,16 @@
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
         tools:targetApi="31">
         <activity
-            android:name=".CreateBlogActivity"
+            android:name=".ViewProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ArticleDetailActivity"
+            android:name=".ui.blogs.BlogDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.blogs.CreateBlogActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.news.ArticleDetailActivity"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"

@@ -1,4 +1,4 @@
-package com.example.finalproject.ui;
+package com.example.finalproject.ui.blogs;
 
 import android.os.Bundle;
 
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.example.finalproject.R;
 
 
-public class ReadNewsFragment extends Fragment {
+public class ReadBlogFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,6 +22,6 @@ public class ReadNewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_read_news, container, false);
+        return inflater.inflate(R.layout.fragment_read_blog, container, false);
     }
 }

@@ -16,7 +16,7 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/readArticleContentTextView"
+                android:id="@+id/blogContentTextView"
                 android:layout_width="188dp"
                 android:layout_height="252dp"
                 android:gravity="center"
@@ -114,7 +114,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/readArticleContentTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/blogContentTextView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -13,16 +13,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalproject.ArticleDetailActivity;
 import com.example.finalproject.R;
 import com.example.finalproject.api.NewsApiService;
 import com.example.finalproject.databinding.FragmentNewsBinding;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

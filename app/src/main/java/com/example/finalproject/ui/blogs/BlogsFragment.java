@@ -4,24 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalproject.CreateBlogActivity;
-import com.example.finalproject.FirebaseAuthentication;
 import com.example.finalproject.HomeActivity;
 import com.example.finalproject.R;
 import com.example.finalproject.databinding.FragmentBlogsBinding;
@@ -43,6 +34,7 @@ public class BlogsFragment extends Fragment {
     MyBlogsAdapter adapter;
 
     Button createBlogButton;
+    String currUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -50,12 +42,12 @@ public class BlogsFragment extends Fragment {
         binding = FragmentBlogsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        String currUser = ((HomeActivity)getActivity()).currUser;
+        currUser = ((HomeActivity)getActivity()).currUser;
 
         createBlogButton = root.findViewById(R.id.createBlogButton);
         myRecyclerView = root.findViewById(R.id.blogRecyclerView);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyBlogsAdapter(new ArrayList<>());
+        adapter = new MyBlogsAdapter(new ArrayList<>(), this::onBlogClicked);
         myRecyclerView.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -91,6 +83,13 @@ public class BlogsFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void onBlogClicked(Blog blog) {
+        Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
+        intent.putExtra("USERNAME", currUser);
+        intent.putExtra("BLOG_DATA", blog); // Make sure Article is Serializable or Parcelable
+        startActivity(intent);
     }
 
     @Override

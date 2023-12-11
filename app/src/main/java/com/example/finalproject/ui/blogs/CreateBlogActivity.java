@@ -1,4 +1,4 @@
-package com.example.finalproject;
+package com.example.finalproject.ui.blogs;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.finalproject.ui.blogs.Blog;
+import com.example.finalproject.HomeActivity;
+import com.example.finalproject.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
@@ -46,9 +47,10 @@ public class CreateBlogActivity extends AppCompatActivity {
                     descriptionEditText.setHint("Error, invalid input");
                     contentEditText.setHint("Error, invalid input");
                 }
+                // check if title is unique, then we can add document
                 Blog b = new Blog(currUser, title, desc, content, new Date());
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("blogs").add(b);
+                db.collection("blogs").document(title).set(b);
 
                 Intent intent = new Intent(CreateBlogActivity.this, HomeActivity.class);
                 intent.putExtra("USERNAME", currUser);

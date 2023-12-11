@@ -5,11 +5,12 @@ package com.example.finalproject.ui.blogs;
 import com.example.finalproject.Comment;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Blog {
+public class Blog implements Serializable {
     private String userWhoCreated;
     private String title;
     private String description;

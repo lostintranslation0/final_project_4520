@@ -11,15 +11,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
 import com.example.finalproject.ui.news.Article;
+import com.example.finalproject.ui.news.MyNewsAdapter;
 
 import java.util.List;
 
 public class MyBlogsAdapter extends RecyclerView.Adapter<MyBlogsAdapter.BlogViewHolder> {
 
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Blog blog);
+    }
     private List<Blog> dataList;
 
-    public MyBlogsAdapter(List<Blog> dataList) {
+    public MyBlogsAdapter(List<Blog> dataList, OnItemClickListener listener) {
         this.dataList = dataList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,7 +39,7 @@ public class MyBlogsAdapter extends RecyclerView.Adapter<MyBlogsAdapter.BlogView
     @Override
     public void onBindViewHolder(@NonNull BlogViewHolder holder, int position) {
         Blog data = dataList.get(position);
-        holder.bind(data);
+        holder.bind(data, listener);
     }
 
     @Override
@@ -63,12 +70,17 @@ public class MyBlogsAdapter extends RecyclerView.Adapter<MyBlogsAdapter.BlogView
             dateTV = itemView.findViewById(R.id.blogDateTextView);
         }
 
-        public void bind(Blog b) {
+        public void bind(Blog b, OnItemClickListener listener) {
             // Bind data to your item views here
             titleTV.setText(b.getTitle());
             authorTV.setText(b.getUserWhoCreated());
             descTV.setText(b.getDescription());
             dateTV.setText(b.getDate().toString());
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(b);
+                }
+            });
         }
     }
 }

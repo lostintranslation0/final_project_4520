@@ -1,4 +1,4 @@
-package com.example.finalproject;
+package com.example.finalproject.ui.news;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.finalproject.R;
 import com.example.finalproject.ui.news.Article;
 
 import java.text.SimpleDateFormat;
