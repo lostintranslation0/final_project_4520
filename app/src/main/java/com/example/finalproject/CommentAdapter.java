@@ -54,7 +54,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
-            userTV = itemView.findViewById(R.id.commentUsernameTextView);
+            userTV = itemView.findViewById(R.id.followerNameTV);
             dateTV = itemView.findViewById(R.id.commentDateTextView);
             contentTV = itemView.findViewById(R.id.commentContentTextView);
         }

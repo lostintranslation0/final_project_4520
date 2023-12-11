@@ -2,10 +2,14 @@ package com.example.finalproject.ui.blogs;
 
 
 
+import android.util.Log;
+
 import com.example.finalproject.Comment;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,15 +33,14 @@ public class Blog implements Serializable {
         this.description = description;
         this.content = content;
         this.date = date;
-        this.comments = new ArrayList<>();
     }
-    public Blog(String userWhoCreated, String title, String description, String content, Date date, List<String> comments) {
+    public Blog(String userWhoCreated, String title, String description, String content, Date date, String jsonComments) {
         this.userWhoCreated = userWhoCreated;
         this.title = title;
         this.description = description;
         this.content = content;
         this.date = date;
-        setCommentsFromJsonStrings(comments);
+        setCommentsFromJsonString(jsonComments);
     }
 
     public String getUserWhoCreated() {
@@ -88,15 +91,12 @@ public class Blog implements Serializable {
         this.comments = comments;
     }
 
-    public void setCommentsFromJsonStrings(List<String> jsons)
+    public void setCommentsFromJsonString(String jsonComments)
     {
+        Log.v("Setting blog with comment json:", jsonComments);
         Gson gson = new Gson();
-        List<Comment> comments = new ArrayList<>();
-        for (String s : jsons)
-        {
-            Comment c = gson.fromJson(s, Comment.class);
-            comments.add(c);
-        }
-        this.comments = comments;
+        Type commentListType = new TypeToken<List<Comment>>(){}.getType();
+        this.comments = gson.fromJson(jsonComments, commentListType);
+        Log.v("Setting comments list to: ", this.comments.toString());
     }
 }

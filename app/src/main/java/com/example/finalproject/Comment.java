@@ -1,8 +1,9 @@
 package com.example.finalproject;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Comment {
+public class Comment implements Serializable {
     private String user;
     private String comment;
 

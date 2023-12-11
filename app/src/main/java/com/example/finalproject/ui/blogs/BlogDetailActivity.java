@@ -16,10 +16,11 @@ import android.widget.TextView;
 import com.example.finalproject.Comment;
 import com.example.finalproject.CommentAdapter;
 import com.example.finalproject.R;
-import com.example.finalproject.ViewProfileActivity;
+import com.example.finalproject.ui.profile.ViewPublicProfileActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,22 +67,27 @@ public class BlogDetailActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.blogCommentRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CommentAdapter(blog.getComments());
+        adapter = new CommentAdapter(blog.getComments() == null ? new ArrayList<>() : blog.getComments());
         recyclerView.setAdapter(adapter);
 
         addCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final EditText editText = new EditText(getApplicationContext());
+                final EditText editText = new EditText(BlogDetailActivity.this);
                 editText.setHint("Enter comment");
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext())
+                AlertDialog.Builder builder = new AlertDialog.Builder(BlogDetailActivity.this)
                         .setTitle("Add Comment")
+                        .setView(editText)
                         .setPositiveButton("Add Comment", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String input = editText.getText().toString();
                                 Comment newComment = new Comment(currUser, input, new Date());
                                 List<Comment> blogComments = blog.getComments();
+                                if (blogComments == null)
+                                {
+                                    blogComments = new ArrayList<>();
+                                }
                                 blogComments.add(newComment);
                                 Gson gson = new Gson();
                                 String json = gson.toJson(blogComments);
@@ -96,7 +102,8 @@ public class BlogDetailActivity extends AppCompatActivity {
                                 dialogInterface.dismiss();
                             }
                         });
-                // alert dialog with a single edit text that takes in a comment
+                builder.create().show();
+
                 // update value in db (also make sure that when we add a new thing that one doesn't
                 // exist for that name already
 
@@ -107,7 +114,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         viewAuthorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BlogDetailActivity.this, ViewProfileActivity.class);
+                Intent intent = new Intent(BlogDetailActivity.this, ViewPublicProfileActivity.class);
                 intent.putExtra("USERNAME_SUBJECT", blog.getUserWhoCreated());
                 intent.putExtra("USERNAME_VIEWER", currUser);
                 startActivity(intent);

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalproject.Comment;
 import com.example.finalproject.HomeActivity;
 import com.example.finalproject.R;
 import com.example.finalproject.databinding.FragmentBlogsBinding;
@@ -46,32 +47,7 @@ public class BlogsFragment extends Fragment {
 
         createBlogButton = root.findViewById(R.id.createBlogButton);
         myRecyclerView = root.findViewById(R.id.blogRecyclerView);
-        myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyBlogsAdapter(new ArrayList<>(), this::onBlogClicked);
-        myRecyclerView.setAdapter(adapter);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("blogs").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful())
-                {
-                    List<Blog> resultBlogs = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.v("in explore querying database for data" , document.getId() + " => " + document.getData());
-                        String title = (String)document.get("title");
-                        String description = (String)document.get("description");
-                        String content = (String)document.get("content");
-                        String userWhoCreated = (String)document.get("userWhoCreated");
-                        Timestamp date = (Timestamp)document.get("date");
-                        List<String> comments = (List<String>)document.get("comments");
-
-                        Blog b = new Blog(userWhoCreated, title, description, content, date.toDate(), comments);
-                        resultBlogs.add(b);
-                    }
-                    adapter.setDataList(resultBlogs);
-                }
-        }});
+        setupRecyclerView();
 
         createBlogButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +66,42 @@ public class BlogsFragment extends Fragment {
         intent.putExtra("USERNAME", currUser);
         intent.putExtra("BLOG_DATA", blog); // Make sure Article is Serializable or Parcelable
         startActivity(intent);
+    }
+
+    private void setupRecyclerView()
+    {
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new MyBlogsAdapter(new ArrayList<>(), this::onBlogClicked);
+        myRecyclerView.setAdapter(adapter);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("blogs").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful())
+                {
+                    List<Blog> resultBlogs = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.v("in explore querying database for data" , document.getId() + " => " + document.getData());
+                        String title = (String)document.get("title");
+                        String description = (String)document.get("description");
+                        String content = (String)document.get("content");
+                        String userWhoCreated = (String)document.get("userWhoCreated");
+                        Timestamp date = (Timestamp)document.get("date");
+                        String jsonComments = (String)document.get("comments");
+
+                        Blog b = new Blog(userWhoCreated, title, description, content, date.toDate(), jsonComments);
+                        resultBlogs.add(b);
+                    }
+                    adapter.setDataList(resultBlogs);
+                }
+            }});
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupRecyclerView();
     }
 
     @Override
