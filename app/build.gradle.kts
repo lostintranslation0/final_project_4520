@@ -13,7 +13,6 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,10 +38,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore:24.2.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.navigation:navigation-fragment:2.5.3")
     implementation("androidx.navigation:navigation-ui:2.5.3")
     implementation("com.google.android.gms:play-services-tasks:18.0.2")

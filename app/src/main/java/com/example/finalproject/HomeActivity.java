@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -15,12 +16,17 @@ public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
 
+    public String currUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Intent intent = getIntent();
+        this.currUser = intent.getStringExtra("USERNAME");
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

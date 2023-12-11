@@ -49,17 +49,26 @@ public class MyBlogsAdapter extends RecyclerView.Adapter<MyBlogsAdapter.BlogView
     public static class BlogViewHolder extends RecyclerView.ViewHolder {
 
         // Add your item views here
-        private TextView textView;
+        private TextView titleTV;
+        private TextView authorTV;
+        private TextView descTV;
+        private TextView dateTV;
 
         public BlogViewHolder(@NonNull View itemView) {
             super(itemView);
             // Initialize your item views here
-            textView = itemView.findViewById(R.id.textView);
+            titleTV = itemView.findViewById(R.id.blogTitleTextView);
+            authorTV = itemView.findViewById(R.id.blogAuthorTextView);
+            descTV = itemView.findViewById(R.id.blogDescTextView);
+            dateTV = itemView.findViewById(R.id.blogDateTextView);
         }
 
-        public void bind(Blog data) {
+        public void bind(Blog b) {
             // Bind data to your item views here
-            textView.setText("hi");
+            titleTV.setText(b.getTitle());
+            authorTV.setText(b.getUserWhoCreated());
+            descTV.setText(b.getDescription());
+            dateTV.setText(b.getDate().toString());
         }
     }
 }
