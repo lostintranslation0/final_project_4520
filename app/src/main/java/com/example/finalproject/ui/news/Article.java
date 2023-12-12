@@ -17,6 +17,9 @@ public class Article implements Serializable {
     @SerializedName("abstract")
     private String abstractText;
 
+    @SerializedName("url")
+    private String url;
+
 
     public String getTitle() {
         return title;
@@ -40,4 +43,9 @@ public class Article implements Serializable {
         }
         return null;
     }
+
+    public String getUrl(){
+        return url;
+    }
+
 }

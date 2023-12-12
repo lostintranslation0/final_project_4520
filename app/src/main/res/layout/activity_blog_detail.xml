@@ -29,12 +29,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="10sp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/blogImageProfile"
-                        android:layout_width="100sp"
-                        android:layout_height="100sp"
+                        android:layout_width="80sp"
+                        android:layout_height="80sp"
+                        android:layout_marginRight="5sp"
                         tools:srcCompat="@tools:sample/avatars" />
 
                     <LinearLayout
@@ -55,13 +57,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Author"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/blogDateTextView2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Date"
                             android:textSize="18sp" />
 
                         <TextView
@@ -91,16 +86,17 @@
                     android:id="@+id/blogContentTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
                     android:gravity="center"
                     android:text="Content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textSize="18sp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/blogCommentRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </androidx.recyclerview.widget.RecyclerView>
+                <Button
+                    android:id="@+id/addCommentButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
+                    android:text="Add Comment" />
 
                 <TextView
                     android:id="@+id/commentsLabelTextView"
@@ -109,11 +105,12 @@
                     android:text="Comments"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                <Button
-                    android:id="@+id/addCommentButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add Comment" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/blogCommentRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
 

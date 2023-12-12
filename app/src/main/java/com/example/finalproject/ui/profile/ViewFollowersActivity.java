@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.finalproject.R;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewFollowersActivity extends AppCompatActivity {
 
@@ -32,6 +34,7 @@ public class ViewFollowersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_followers);
+        getSupportActionBar().setTitle("Blogs");
 
         Intent intent = getIntent();
         subjectUsername = intent.getStringExtra("USERNAME_SUBJECT");
@@ -50,11 +53,29 @@ public class ViewFollowersActivity extends AppCompatActivity {
         db.collection("users").document(subjectUsername).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                // gets the user
-                User user = task.getResult().toObject(User.class);
-                nameTextView.setText(user.getUsername());
-                numFollowersTextView.setText("Number of Followers: " + user.getFollowers().size());
-                adapter.setDataList(user.getFollowers());
+                if (task.isSuccessful()) {
+                    // gets the user
+                    User user = task.getResult().toObject(User.class);
+                    if (user != null) {
+                        nameTextView.setText(user.getUsername());
+
+                        // Check if followers list is null and initialize if necessary
+                        List<String> followers = user.getFollowers();
+                        if (followers == null) {
+                            followers = new ArrayList<>();
+                        }
+
+                        numFollowersTextView.setText("Number of Followers: " + followers.size());
+                        adapter.setDataList(followers);
+                    } else {
+                        // Handle case where user is null
+                        numFollowersTextView.setText("Number of Followers: 0");
+                    }
+                } else {
+                    // Handle error
+                    Log.e("ViewFollowersActivity", "Error getting user data: ", task.getException());
+                    numFollowersTextView.setText("Number of Followers: 0");
+                }
             }
         });
     }
