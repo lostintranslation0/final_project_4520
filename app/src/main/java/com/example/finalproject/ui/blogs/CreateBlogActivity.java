@@ -27,6 +27,7 @@ public class CreateBlogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_blog);
+        getSupportActionBar().setTitle("Blogs");
 
         Intent intent = getIntent();
         currUser = intent.getStringExtra("USERNAME");

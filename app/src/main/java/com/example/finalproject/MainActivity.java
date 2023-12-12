@@ -78,9 +78,7 @@ public class MainActivity extends AppCompatActivity {
                                             String uname = (String)d.getData().get("username");
 
                                             // Request notification permission for Android 13 and above
-                                            if (!hasNotificationPermission()) {
-                                                requestNotificationPermission();
-                                            }
+
                                             configureReceiver(uname);
                                             startService();
                                             Toast.makeText(MainActivity.this, "Login successful",
@@ -112,6 +110,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if (!hasNotificationPermission()) {
+            requestNotificationPermission();
+        }
     }
 
 
