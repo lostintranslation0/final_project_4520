@@ -45,7 +45,7 @@ public class MyService extends Service {
             synchronized (this) {
                 while (true) {
                     try {
-                        wait(300000); // Wait for 15 minutes
+                        wait(30000);
                         Log.v("MyService", "Checking for new posts");
                         checkAndSendBroadcast();
                     } catch (InterruptedException e) {

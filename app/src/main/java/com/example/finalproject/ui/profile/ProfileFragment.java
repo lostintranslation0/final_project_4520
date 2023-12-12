@@ -51,6 +51,7 @@ public class ProfileFragment extends Fragment {
 
     private static final int OPEN_REQUEST_CODE = 102;
     private static final int PHOTO_REQUEST_CODE = 101;
+    private String currUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
@@ -59,6 +60,7 @@ public class ProfileFragment extends Fragment {
         View root = binding.getRoot();
 
         profileImageView = root.findViewById(R.id.profileFragmentImage);
+        loadProfileImage();
         takeNewProfilePicButton = root.findViewById(R.id.takeNewProfilePicButton);
         uploadNewProfilePicButton = root.findViewById(R.id.uploadNewProfilePicButton);
         saveProfileChangesButton = root.findViewById(R.id.saveProfileChanges);
@@ -71,7 +73,7 @@ public class ProfileFragment extends Fragment {
         viewFollowingButton = root.findViewById(R.id.viewFollowingButton);
         viewBlogsButton = root.findViewById(R.id.profileMyBlogsButton);
 
-        String currUser = ((HomeActivity)getActivity()).currUser;
+        currUser = ((HomeActivity)getActivity()).currUser;
 
         viewFollowersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +115,7 @@ public class ProfileFragment extends Fragment {
                 uploadImageToFirebase(imageUri);
             }
         });
-        loadProfileImage();
+
 
         return root;
     }
@@ -155,7 +157,7 @@ public class ProfileFragment extends Fragment {
 
         // Update age in Firestore
         if (newAge > 0 && user != null) {
-            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+            FirebaseFirestore.getInstance().collection("users").document(currUser)
                     .update("age", newAge)
                     .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Age updated successfully", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update age: " + e.getMessage(), Toast.LENGTH_LONG).show());
