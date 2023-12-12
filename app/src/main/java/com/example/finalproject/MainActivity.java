@@ -14,6 +14,12 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,11 +59,25 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Login successful
-                            Toast.makeText(MainActivity.this, "Login successful",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                            intent.putExtra("USERNAME", username);
-                            startActivity(intent);
+
+                            FirebaseFirestore.getInstance().collection("users").whereEqualTo("email", username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot d : task.getResult())
+                                        {
+                                            String uname = (String)d.getData().get("username");
+                                            Toast.makeText(MainActivity.this, "Login successful",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                            intent.putExtra("USERNAME", uname);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                }
+
+                            });
+
                         } else {
                             // Login failed
                             Toast.makeText(MainActivity.this, "Login failed. " +

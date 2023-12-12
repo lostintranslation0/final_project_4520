@@ -43,6 +43,7 @@ public class ViewFollowersActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.followersRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyFollowerAdapter(new ArrayList<>(), this::onFollowerClicked);
+        recyclerView.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.blogs;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,18 +9,22 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.finalproject.Comment;
-import com.example.finalproject.CommentAdapter;
 import com.example.finalproject.R;
 import com.example.finalproject.ui.profile.ViewPublicProfileActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +40,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     CommentAdapter adapter;
+    Blog blog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +50,10 @@ public class BlogDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         currUser = intent.getStringExtra("USERNAME");
 
-        Blog blog = (Blog) intent.getSerializableExtra("BLOG_DATA");
+        blog = (Blog) intent.getSerializableExtra("BLOG_DATA");
         if (blog == null) {
             throw new Error("Internal Error: blog null");
         }
-
-
 
         titleTV= findViewById(R.id.blogTitleTextView);
         descTV = findViewById(R.id.blogDescTextView);
@@ -67,7 +71,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.blogCommentRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CommentAdapter(blog.getComments() == null ? new ArrayList<>() : blog.getComments());
+        adapter = new CommentAdapter(blog.getComments() == null ? new ArrayList<>() : Comment.flattenComments(blog.getComments()), this::onCommentClicked);
         recyclerView.setAdapter(adapter);
 
         addCommentButton.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +86,7 @@ public class BlogDetailActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String input = editText.getText().toString();
-                                Comment newComment = new Comment(currUser, input, new Date());
+                                Comment newComment = new Comment(currUser, input, new Date(), 0);
                                 List<Comment> blogComments = blog.getComments();
                                 if (blogComments == null)
                                 {
@@ -93,7 +97,7 @@ public class BlogDetailActivity extends AppCompatActivity {
                                 String json = gson.toJson(blogComments);
                                 // commit to database
                                 FirebaseFirestore.getInstance().collection("blogs").document(blog.getTitle()).update("comments", json);
-                                adapter.setDataList(blogComments);
+                                adapter.setDataList(Comment.flattenComments(blogComments));
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -103,11 +107,6 @@ public class BlogDetailActivity extends AppCompatActivity {
                             }
                         });
                 builder.create().show();
-
-                // update value in db (also make sure that when we add a new thing that one doesn't
-                // exist for that name already
-
-                //TODO
             }
         });
 
@@ -121,5 +120,55 @@ public class BlogDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void refreshComments()
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("blogs").document(blog.getTitle()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful())
+                {
+
+                }
+            }
+        });
+    }
+
+
+    private void onCommentClicked(Comment comment) {
+        Log.v("comment clicked", "on comment clicked");
+
+        int indOfThisComment = blog.getComments().indexOf(comment);
+        if (indOfThisComment == -1)
+        {
+            throw new Error("Internal error, indexing comments");
+        }
+
+        Comment commentToChange = blog.getComments().get(indOfThisComment);
+
+        final EditText editText = new EditText(BlogDetailActivity.this);
+        editText.setHint("Enter reply");
+        AlertDialog.Builder builder = new AlertDialog.Builder(BlogDetailActivity.this)
+                .setTitle("Add reply")
+                .setView(editText)
+                .setPositiveButton("Post Reply", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String input = editText.getText().toString();
+                        Comment newComment = new Comment(currUser, input, new Date(), commentToChange.getLevel() + 1);
+                        commentToChange.addReply(newComment);
+
+                        FirebaseFirestore.getInstance().collection("blogs").document(blog.getTitle()).update("comments", blog.getComments());
+                        adapter.setDataList(Comment.flattenComments(blog.getComments()));
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 }

@@ -4,7 +4,6 @@ package com.example.finalproject.ui.blogs;
 
 import android.util.Log;
 
-import com.example.finalproject.Comment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -93,7 +92,11 @@ public class Blog implements Serializable {
 
     public void setCommentsFromJsonString(String jsonComments)
     {
-        Log.v("Setting blog with comment json:", jsonComments);
+        if (jsonComments == null)
+        {
+            return;
+        }
+        //Log.v("Setting blog with comment json:", jsonComments);
         Gson gson = new Gson();
         Type commentListType = new TypeToken<List<Comment>>(){}.getType();
         this.comments = gson.fromJson(jsonComments, commentListType);

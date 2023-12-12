@@ -5,17 +5,17 @@ import com.example.finalproject.ui.blogs.Blog;
 import java.util.List;
 
 public class User {
+    private String email;
     private String username;
-    private String password;
     private int age;
     private List<String> followers;
 
+    private String imageUrl;
     public User() {}
 
-    public User(String username, String password, int age) {
+    public User(String email, String username) {
+        this.email = email;
         this.username = username;
-        this.password = password;
-        this.age = age;
     }
 
     public String getUsername() {
@@ -25,13 +25,12 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getAge() {
@@ -50,9 +49,6 @@ public class User {
         this.followers = followers;
     }
 
-    private String imageUrl;
-
-
     public List<String> getUserFollowers() {
         return null;
     }
@@ -64,21 +60,4 @@ public class User {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
 }

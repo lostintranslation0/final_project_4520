@@ -1,4 +1,4 @@
-package com.example.finalproject;
+package com.example.finalproject.ui.blogs;
 
 
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.finalproject.R;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         void onItemClick(Comment comment);
     }
 
-    public CommentAdapter(List<Comment> dataList) {
+    public CommentAdapter(List<Comment> dataList, OnItemClickListener listener) {
         this.dataList = dataList;
         this.listener = listener;
     }
@@ -34,8 +36,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        Comment data = dataList.get(position);
-        holder.bind(data, listener);
+        Comment comment = dataList.get(position);
+        // Set the views based on the comment data
+
+        // Adjust left margin based on the comment level for indentation
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+        layoutParams.leftMargin = comment.getLevel() * 35; // 50px indentation per level
+        holder.itemView.setLayoutParams(layoutParams);
+        holder.bind(comment, listener);
     }
 
     @Override

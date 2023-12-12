@@ -26,6 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -73,11 +74,36 @@ public class RegisterActivity extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 String ageText = ageEditText.getText().toString();
-                final int[] age = {0};
+
+                // check if any user exists with display name already
+
+                try {
+                    FirebaseFirestore.getInstance().collection("users").whereEqualTo("username", displayName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful())
+                            {
+                                if (!task.getResult().isEmpty())
+                                {
+                                    displayNameEditText.setText("Username already exists. Try again.");
+                                    throw new Error("User already exists");
+                                }
+                            }
+                        }
+                    });
+
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    return;
+                }
+
+                int age;
 
                 if (!ageText.isEmpty()) {
                     try {
-                        age[0] = Integer.parseInt(ageText);
+                        age = Integer.parseInt(ageText);
                     } catch (NumberFormatException e) {
                         Toast.makeText(RegisterActivity.this, "Invalid age entered", Toast.LENGTH_SHORT).show();
                         return;
@@ -88,9 +114,8 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            User user = new User();
-                            user.setAge(age[0]);
-                            user.setUsername(displayName);
+                            User user = new User(username, displayName);
+                            //user.setAge(age);
 
 
                             if (imageUri != null) {
@@ -182,15 +207,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserToFirestore(User user) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseFirestore.getInstance().collection("users").document(userId).set(user)
-                .addOnSuccessListener(aVoid -> Log.d("DatabaseUpdate", "User object stored successfully in database for user: " + userId))
+        FirebaseFirestore.getInstance().collection("users").document(user.getUsername()).set(user)
+                .addOnSuccessListener(aVoid -> Log.d("DatabaseUpdate", "User object stored successfully in database for user: " + user.getUsername()))
                 .addOnFailureListener(e -> Log.e("DatabaseUpdate", "Failed to store user object in database: " + e.getMessage(), e));
     }
-
-
-
-
 }
 
 

@@ -54,7 +54,12 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
         followButton = findViewById(R.id.followButton);
         viewFollowersButton = findViewById(R.id.seeFollowersButton);
 
+        adapter = new MyBlogsAdapter(new ArrayList<>(), this::onBlogClicked);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
+        usernameTextView = findViewById(R.id.publicProfileNameTextView);
+        usernameTextView.setText(subjectUsername);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -65,7 +70,7 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                 if (task.isSuccessful())
                 {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.v("in explore querying database for data" , document.getId() + " => " + document.getData());
+                        Log.v("in pp querying database for blogs" , document.getId() + " => " + document.getData());
                         String title = (String)document.get("title");
                         String description = (String)document.get("description");
                         String content = (String)document.get("content");
@@ -76,14 +81,13 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                         Blog b = new Blog(userWhoCreated, title, description, content, date.toDate(), jsonComments);
                         userBlogs.add(b);
                     }
+                    adapter.setDataList(userBlogs);
 
                 }
             }
         });
 
-        adapter = new MyBlogsAdapter(userBlogs, this::onBlogClicked);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+
 
         // Populate the profile data with the users stuff
         // Start with name, profile picture, blogs
@@ -96,12 +100,13 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                 if (task.isSuccessful())
                 {
                     List<String> followers = (List<String>)task.getResult().get("followers");
-                    if (followers.contains(viewerUsername))
+
+                    if (followers == null || !followers.contains(viewerUsername))
                     {
-                        followButton.setText("Unfollow");
+                        followButton.setText("Follow");
                     }
                     else {
-                        followButton.setText("Follow");
+                        followButton.setText("Unfollow");
                     }
                 }
             }
@@ -118,6 +123,10 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             List<String> followers = (List<String>)task.getResult().get("followers");
+                            if (followers == null)
+                            {
+                                followers = new ArrayList<>();
+                            }
                             if (followButton.getText().toString().equals("Follow"))
                             {
                                 followButton.setText("Unfollow");

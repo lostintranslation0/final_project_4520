@@ -33,7 +33,7 @@ public class MyFollowerAdapter extends RecyclerView.Adapter<MyFollowerAdapter.Fo
     @NonNull
     @Override
     public FollowerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.blog_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.follower_item, parent, false);
         return new MyFollowerAdapter.FollowerViewHolder(view);
     }
 
