@@ -24,8 +24,8 @@
             android:textSize="30dp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="170dp"
             android:layout_marginBottom="10sp"
             android:orientation="horizontal">
 
@@ -46,6 +46,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="View Followers" />
+
+                <Button
+                    android:id="@+id/viewFollowingButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View Following" />
 
                 <Button
                     android:id="@+id/profileMyBlogsButton"

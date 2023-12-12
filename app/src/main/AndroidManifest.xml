@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -20,9 +21,6 @@
             android:exported="false" />
         <activity
             android:name=".ui.profile.ViewPublicProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewProfileActivity"
             android:exported="false" />
         <activity
             android:name=".ui.blogs.BlogDetailActivity"
@@ -48,6 +46,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".notificationservice.MyService"></service>
+        <receiver android:name=".notificationservice.MyBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.finalproject" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

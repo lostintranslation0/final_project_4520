@@ -127,11 +127,22 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                             {
                                 followers = new ArrayList<>();
                             }
+                            List<String> following = (List<String>)task.getResult().get("following");
+                            if (following == null)
+                            {
+                                following = new ArrayList<>();
+                            }
+
                             if (followButton.getText().toString().equals("Follow"))
                             {
                                 followButton.setText("Unfollow");
+                                // add to other user's followers
                                 followers.add(viewerUsername);
                                 db.collection("users").document(subjectUsername).update("followers", followers);
+
+                                // add to this user's following
+                                following.add(subjectUsername);
+                                db.collection("users").document(viewerUsername).update("following", following);
                             }
                             else if (followButton.getText().toString().equals("Unfollow"))
                             {
@@ -139,6 +150,9 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                                 followButton.setText("Follow");
                                 followers.remove(viewerUsername);
                                 db.collection("users").document(subjectUsername).update("followers", followers);
+
+                                following.remove(subjectUsername);
+                                db.collection("users").document(viewerUsername).update("following", following);
                             }
                         }
                     }
@@ -152,6 +166,7 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(ViewPublicProfileActivity.this, ViewFollowersActivity.class);
                 intent.putExtra("USERNAME_SUBJECT", subjectUsername);
                 intent.putExtra("USERNAME_VIEWER", viewerUsername);
+                intent.putExtra("MODE", "FOLLOWERS");
                 startActivity(intent);
             }
         });

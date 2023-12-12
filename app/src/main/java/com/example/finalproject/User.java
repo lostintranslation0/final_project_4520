@@ -10,6 +10,12 @@ public class User {
     private int age;
     private List<String> followers;
 
+    private List<String> following;
+
+    public void setFollowing(List<String> following) {
+        this.following = following;
+    }
+
     private String imageUrl;
     public User() {}
 
@@ -45,12 +51,10 @@ public class User {
         return followers;
     }
 
+    public List<String> getFollowing() { return following; }
+
     public void setFollowers(List<String> followers) {
         this.followers = followers;
-    }
-
-    public List<String> getUserFollowers() {
-        return null;
     }
 
     public String getImageUrl() {

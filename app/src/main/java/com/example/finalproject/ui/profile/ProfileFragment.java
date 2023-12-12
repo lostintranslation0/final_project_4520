@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.finalproject.HomeActivity;
 import com.example.finalproject.R;
 import com.example.finalproject.User;
 import com.example.finalproject.databinding.FragmentProfileBinding;
@@ -43,6 +44,8 @@ public class ProfileFragment extends Fragment {
     private ImageView profileImageView;
     private Uri imageUri;
     private Button takeNewProfilePicButton, uploadNewProfilePicButton, saveProfileChangesButton;
+
+    private Button viewFollowersButton, viewFollowingButton, viewBlogsButton;
     private EditText profileEmailEditText, profilePasswordEditText, profileAgeEditText;
 
     private static final int OPEN_REQUEST_CODE = 102;
@@ -60,6 +63,44 @@ public class ProfileFragment extends Fragment {
         profileEmailEditText = root.findViewById(R.id.profileEmailEditText);
         profilePasswordEditText = root.findViewById(R.id.profilePasswordEditText);
         profileAgeEditText = root.findViewById(R.id.profileAgeEditText);
+
+        viewFollowersButton = root.findViewById(R.id.profileViewFollowersButton);
+        viewFollowingButton = root.findViewById(R.id.viewFollowingButton);
+        viewBlogsButton = root.findViewById(R.id.profileMyBlogsButton);
+
+        String currUser = ((HomeActivity)getActivity()).currUser;
+
+        viewFollowersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ViewFollowersActivity.class);
+                intent.putExtra("MODE", "FOLLOWERS");
+                intent.putExtra("USERNAME_SUBJECT", currUser);
+                intent.putExtra("USERNAME_VIEWER", currUser);
+                startActivity(intent);
+            }
+        });
+
+        viewFollowingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ViewFollowersActivity.class);
+                intent.putExtra("MODE", "FOLLOWING");
+                intent.putExtra("USERNAME_SUBJECT", currUser);
+                intent.putExtra("USERNAME_VIEWER", currUser);
+                startActivity(intent);
+            }
+        });
+
+        viewBlogsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ViewPublicProfileActivity.class);
+                intent.putExtra("USERNAME_SUBJECT", currUser);
+                intent.putExtra("USERNAME_VIEWER", currUser);
+                startActivity(intent);
+            }
+        });
 
         takeNewProfilePicButton.setOnClickListener(view -> takePicture());
         uploadNewProfilePicButton.setOnClickListener(view -> uploadPicture());

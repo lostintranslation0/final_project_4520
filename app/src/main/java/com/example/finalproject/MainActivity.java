@@ -3,7 +3,9 @@ package com.example.finalproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finalproject.notificationservice.MyBroadcastReceiver;
+import com.example.finalproject.notificationservice.MyService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText usernameEntry;
     private EditText passwordEntry;
     private TextView errorTextView;
-
+    private BroadcastReceiver receiver;
     FirebaseAuthentication auth;
 
 
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
                                         for (QueryDocumentSnapshot d : task.getResult())
                                         {
                                             String uname = (String)d.getData().get("username");
+                                            configureReceiver(uname);
+                                            startService();
                                             Toast.makeText(MainActivity.this, "Login successful",
                                                     Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
@@ -96,5 +102,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+
+
+    private void configureReceiver(String uname) {
+        receiver = new MyBroadcastReceiver(uname);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.example.finalproject.BLOG_NOTIFICATION"); // Updated action string
+        registerReceiver(receiver, filter);
+    }
+
+    public void startService() {
+
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
     }
 }
