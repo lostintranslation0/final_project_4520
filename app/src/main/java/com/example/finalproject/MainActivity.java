@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                                             // Request notification permission for Android 13 and above
 
                                             configureReceiver(uname);
-                                            startService();
+                                            startService(uname);
                                             Toast.makeText(MainActivity.this, "Login successful",
                                                     Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
@@ -125,9 +125,10 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
     }
 
-    public void startService() {
+    public void startService(String uname) {
 
         Intent intent = new Intent(this, MyService.class);
+        intent.putExtra("USERNAME", uname);
         startService(intent);
     }
 
