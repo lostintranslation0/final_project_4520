@@ -87,12 +87,9 @@ public class BlogDetailActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String input = editText.getText().toString();
                                 Comment newComment = new Comment(currUser, input, new Date(), 0);
+
+                                blog.addComment(newComment);
                                 List<Comment> blogComments = blog.getComments();
-                                if (blogComments == null)
-                                {
-                                    blogComments = new ArrayList<>();
-                                }
-                                blogComments.add(newComment);
                                 Gson gson = new Gson();
                                 String json = gson.toJson(blogComments);
                                 // commit to database
@@ -140,13 +137,13 @@ public class BlogDetailActivity extends AppCompatActivity {
     private void onCommentClicked(Comment comment) {
         Log.v("comment clicked", "on comment clicked");
 
-        int indOfThisComment = blog.getComments().indexOf(comment);
-        if (indOfThisComment == -1)
-        {
-            throw new Error("Internal error, indexing comments");
-        }
+//        int indOfThisComment = indexOf(comment);
+//        if (indOfThisComment == -1)
+//        {
+//            throw new Error("Internal error, indexing comments");
+//        }
 
-        Comment commentToChange = blog.getComments().get(indOfThisComment);
+        Comment commentToChange = comment;
 
         final EditText editText = new EditText(BlogDetailActivity.this);
         editText.setHint("Enter reply");
@@ -160,7 +157,9 @@ public class BlogDetailActivity extends AppCompatActivity {
                         Comment newComment = new Comment(currUser, input, new Date(), commentToChange.getLevel() + 1);
                         commentToChange.addReply(newComment);
 
-                        FirebaseFirestore.getInstance().collection("blogs").document(blog.getTitle()).update("comments", blog.getComments());
+                        Gson gson = new Gson();
+                        String newJson = gson.toJson(blog.getComments());
+                        FirebaseFirestore.getInstance().collection("blogs").document(blog.getTitle()).update("comments", newJson);
                         adapter.setDataList(Comment.flattenComments(blog.getComments()));
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

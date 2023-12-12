@@ -18,8 +18,6 @@ public class Blog implements Serializable {
     private String title;
     private String description;
 
-
-
     private String content;
     private Date date;
     private List<Comment> comments;
@@ -101,5 +99,14 @@ public class Blog implements Serializable {
         Type commentListType = new TypeToken<List<Comment>>(){}.getType();
         this.comments = gson.fromJson(jsonComments, commentListType);
         Log.v("Setting comments list to: ", this.comments.toString());
+    }
+
+    public void addComment(Comment comment)
+    {
+        if (this.comments == null)
+        {
+            this.comments = new ArrayList<>();
+        }
+        this.comments.add(comment);
     }
 }
