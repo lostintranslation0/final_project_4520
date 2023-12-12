@@ -3,6 +3,7 @@ package com.example.finalproject.ui.profile;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -41,12 +44,15 @@ public class ProfileFragment extends Fragment {
     private Uri imageUri;
     private Button takeNewProfilePicButton, uploadNewProfilePicButton, saveProfileChangesButton;
     private EditText profileEmailEditText, profilePasswordEditText, profileAgeEditText;
+    private Switch darkModeSwitch;
 
     private static final int OPEN_REQUEST_CODE = 102;
     private static final int PHOTO_REQUEST_CODE = 101;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
+        darkModeSwitch = binding.darkModeSwitch;
+        initializeDarkModeSwitch();
         View root = binding.getRoot();
 
         profileImageView = root.findViewById(R.id.profileFragmentImage);
@@ -69,6 +75,20 @@ public class ProfileFragment extends Fragment {
         loadProfileImage();
 
         return root;
+    }
+
+    private void initializeDarkModeSwitch() {
+        int nightModeFlags = getContext().getResources().getConfiguration().uiMode &
+                Configuration.UI_MODE_NIGHT_MASK;
+        darkModeSwitch.setChecked(nightModeFlags == Configuration.UI_MODE_NIGHT_YES);
+
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        });
     }
 
     private void updateUserInfo() {
