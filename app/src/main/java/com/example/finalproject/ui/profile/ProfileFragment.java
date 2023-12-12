@@ -7,10 +7,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.example.finalproject.databinding.FragmentProfileBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private ImageView profileImageView;
     private Uri imageUri;
     private Button takeNewProfilePicButton, uploadNewProfilePicButton, saveProfileChangesButton;
+    private EditText profileEmailEditText, profilePasswordEditText, profileAgeEditText;
 
     private static final int OPEN_REQUEST_CODE = 102;
     private static final int PHOTO_REQUEST_CODE = 101;
@@ -53,18 +57,64 @@ public class ProfileFragment extends Fragment {
         uploadNewProfilePicButton = root.findViewById(R.id.uploadNewProfilePicButton);
         saveProfileChangesButton = root.findViewById(R.id.saveProfileChanges);
 
+        profileEmailEditText = root.findViewById(R.id.profileEmailEditText);
+        profilePasswordEditText = root.findViewById(R.id.profilePasswordEditText);
+        profileAgeEditText = root.findViewById(R.id.profileAgeEditText);
+
         takeNewProfilePicButton.setOnClickListener(view -> takePicture());
         uploadNewProfilePicButton.setOnClickListener(view -> uploadPicture());
         saveProfileChangesButton.setOnClickListener(view -> {
+            updateUserInfo();
             if (imageUri != null) {
                 uploadImageToFirebase(imageUri);
             }
         });
-
         loadProfileImage();
 
         return root;
     }
+
+    private void updateUserInfo() {
+        String newEmail = profileEmailEditText.getText().toString();
+        String newPassword = profilePasswordEditText.getText().toString();
+        String ageText = profileAgeEditText.getText().toString();
+        int newAge = ageText.isEmpty() ? 0 : Integer.parseInt(ageText);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        // Update email
+        if (!newEmail.isEmpty() && user != null) {
+            updateEmail(newEmail);
+        }
+
+        // Update password
+        if (!newPassword.isEmpty() && user != null) {
+            user.updatePassword(newPassword)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update password: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        }
+
+        // Update age in Firestore
+        if (newAge > 0 && user != null) {
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .update("age", newAge)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Age updated successfully", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update age: " + e.getMessage(), Toast.LENGTH_LONG).show());
+
+        }
+    }
+
+    private void updateEmail(String newEmail) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            user.verifyBeforeUpdateEmail(newEmail)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Verification email sent. Please verify to update email.", Toast.LENGTH_LONG).show())
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to send verification email: " + e.getMessage(), Toast.LENGTH_LONG).show());
+        }
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -153,5 +203,14 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Set the ActionBar title
+        if (getActivity() != null) {
+            getActivity().setTitle("Profile");
+        }
     }
 }

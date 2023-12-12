@@ -39,8 +39,11 @@ public class RegisterActivity extends AppCompatActivity {
     EditText usernameEditText;
     EditText passwordEditText;
     Button registerButton;
-    private Uri imageUri; // Add this line
+    private Uri imageUri;
 
+    EditText ageEditText;
+
+    EditText displayNameEditText;
 
     private static final int OPEN_REQUEST_CODE = 102;
     private static final int PHOTO_REQUEST_CODE = 101;
@@ -55,46 +58,66 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         imageView = findViewById(R.id.imageViewRegister);
 
-
         auth = new FirebaseAuthentication();
 
         usernameEditText = findViewById(R.id.regUsernameEditText);
         passwordEditText = findViewById(R.id.regPasswordEditText);
         registerButton = findViewById(R.id.registerUserButton);
+        ageEditText = findViewById(R.id.regAgeEditText);
+        displayNameEditText = findViewById(R.id.regDisplayNameEditText);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String displayName = displayNameEditText.getText().toString();
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                String ageText = ageEditText.getText().toString();
+                final int[] age = {0};
+
+                if (!ageText.isEmpty()) {
+                    try {
+                        age[0] = Integer.parseInt(ageText);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(RegisterActivity.this, "Invalid age entered", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
 
                 auth.registerUser(username, password, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Registration successful
-                            Toast.makeText(RegisterActivity.this, "Registration successful",
-                                    Toast.LENGTH_SHORT).show();
+                            User user = new User();
+                            user.setAge(age[0]);
+                            user.setUsername(displayName);
+
 
                             if (imageUri != null) {
-                                uploadImageToFirebase(imageUri);
+                                uploadImageToFirebase(imageUri, user);
+                            } else {
+                                saveUserToFirestore(user);
                             }
 
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
                             // Registration failed
-                            Toast.makeText(RegisterActivity.this, "Registration failed. " +
-                                            task.getException().getMessage(),
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
-
-
     }
+
+    private void saveUserWithoutImage(User user) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users").document(userId).set(user)
+                .addOnSuccessListener(aVoid -> Log.d("DatabaseUpdate", "User object stored successfully in database for user: " + userId))
+                .addOnFailureListener(e -> Log.e("DatabaseUpdate", "Failed to store user object in database: " + e.getMessage(), e));
+    }
+
 
     private boolean hasCamera() {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
@@ -121,14 +144,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == PHOTO_REQUEST_CODE) {
-                // Handle camera image
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
                 imageView.setImageBitmap(imageBitmap);
-                // Convert bitmap to Uri and store it
                 imageUri = getImageUri(getApplicationContext(), imageBitmap);
             } else if (requestCode == OPEN_REQUEST_CODE) {
-                // Handle gallery image
                 imageUri = data.getData();
                 imageView.setImageURI(imageUri);
             }
@@ -136,8 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    private void uploadImageToFirebase(Uri imageUri) {
-        Log.d("UploadImage", "Attempting to upload image");
+    private void uploadImageToFirebase(Uri imageUri, User user) {
         if (imageUri == null) {
             Log.d("UploadImage", "Image URI is null");
             return;
@@ -145,39 +164,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("user_images/" + UUID.randomUUID().toString());
         storageRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String imageUrl = uri.toString();
-                        Log.d("UploadImage", "Image uploaded successfully. URL: " + imageUrl);
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String imageUrl = uri.toString();
+                    user.setImageUrl(imageUrl);
 
-                        // Set the imageUrl field of the user object
-                        User user = new User();
-                        user.setImageUrl(imageUrl);
-
-                        // Storing the user object in Firestore with the imageUrl field
-                        FirebaseFirestore.getInstance().collection("users").document(userId).set(user)
-                                .addOnSuccessListener(aVoid -> {
-                                    // Log success
-                                    Log.d("DatabaseUpdate", "User object with Image URL stored successfully in database for user: " + userId);
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Log failure
-                                    Log.e("DatabaseUpdate", "Failed to store user object with Image URL in database: " + e.getMessage(), e);
-                                });
-
-                        Log.d("DatabaseUpdate", "Set value called for user: " + userId + " with Image URL: " + imageUrl);
-
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("UploadImage", "Image upload failed: " + e.getMessage(), e);
-                    Toast.makeText(RegisterActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                    saveUserToFirestore(user);
+                }))
+                .addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
-
-
-
 
     private Uri getImageUri(Context inContext, Bitmap inImage) {
         ContentValues values = new ContentValues();
@@ -186,6 +180,14 @@ public class RegisterActivity extends AppCompatActivity {
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Image Title", null);
         return Uri.parse(path);
     }
+
+    private void saveUserToFirestore(User user) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseFirestore.getInstance().collection("users").document(userId).set(user)
+                .addOnSuccessListener(aVoid -> Log.d("DatabaseUpdate", "User object stored successfully in database for user: " + userId))
+                .addOnFailureListener(e -> Log.e("DatabaseUpdate", "Failed to store user object in database: " + e.getMessage(), e));
+    }
+
 
 
 
