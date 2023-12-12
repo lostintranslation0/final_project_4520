@@ -14,9 +14,13 @@ import com.example.finalproject.ui.news.Article;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.text.ParseException;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
+import android.widget.TextView;
+
 public class ArticleDetailActivity extends AppCompatActivity {
 
-    private TextView textViewTitle, textViewContent, textViewSection, textViewDate;
+    private TextView textViewTitle, textViewContent, textViewSection, textViewDate, textViewUrl;
     private ImageView imageViewArticle;
 
     @Override
@@ -33,6 +37,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         textViewContent = findViewById(R.id.articleContent);
         textViewSection = findViewById(R.id.sectionArticle);
         textViewDate = findViewById(R.id.dateArticle);
+        textViewUrl = findViewById(R.id.urlTextView);
 
         // Retrieve the article data from the intent
         Article article = (Article) getIntent().getSerializableExtra("ARTICLE_DATA");
@@ -42,6 +47,10 @@ public class ArticleDetailActivity extends AppCompatActivity {
             textViewSection.setText("Section: "+ article.getSection());
             String formattedDate = formatDateString(article.getPublished_date());
             textViewDate.setText("Date: " + formattedDate);
+            textViewUrl.setText(article.getUrl());
+            // Make the URL clickable
+            Linkify.addLinks(textViewUrl, Linkify.WEB_URLS);
+            textViewUrl.setMovementMethod(LinkMovementMethod.getInstance());
 
             Log.d("ArticleDetailActivity", "Image URL: " + article.getImageUrl());
 

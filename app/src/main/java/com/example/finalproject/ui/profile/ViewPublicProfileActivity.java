@@ -10,9 +10,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalproject.R;
+import com.example.finalproject.User;
 import com.example.finalproject.ui.blogs.Blog;
 import com.example.finalproject.ui.blogs.BlogDetailActivity;
 import com.example.finalproject.ui.blogs.MyBlogsAdapter;
@@ -39,12 +42,14 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
 
     Button followButton;
     Button viewFollowersButton;
+    private ImageView publicProfilePictureImageView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_public_profile);
+        getSupportActionBar().setTitle("Blogs");
 
         Intent intent = getIntent();
         subjectUsername = intent.getStringExtra("USERNAME_SUBJECT");
@@ -170,6 +175,11 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        publicProfilePictureImageView = findViewById(R.id.publicProfilePictureImageView);
+
+        // Load the profile image
+        loadProfileImage(subjectUsername);
     }
 
     private void onBlogClicked(Blog blog) {
@@ -178,5 +188,28 @@ public class ViewPublicProfileActivity extends AppCompatActivity {
         intent.putExtra("BLOG_DATA", blog); // Make sure Article is Serializable or Parcelable
         startActivity(intent);
     }
-
+    private void loadProfileImage(String username) {
+        FirebaseFirestore.getInstance().collection("users")
+                .document(username)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            User user = document.toObject(User.class);
+                            if (user != null && user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+                                Glide.with(this)
+                                        .load(user.getImageUrl())
+                                        .placeholder(R.drawable.default_profile_image)
+                                        .error(R.drawable.default_profile_image)
+                                        .into(publicProfilePictureImageView);
+                            } else {
+                                publicProfilePictureImageView.setImageResource(R.drawable.default_profile_image);
+                            }
+                        }
+                    } else {
+                        Log.e("ViewPublicProfile", "Error getting user data: ", task.getException());
+                    }
+                });
+    }
 }

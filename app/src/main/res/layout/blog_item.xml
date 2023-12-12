@@ -35,8 +35,8 @@
 
                     <ImageView
                         android:id="@+id/blogImageProfile"
-                        android:layout_width="80sp"
-                        android:layout_height="80sp"
+                        android:layout_width="70sp"
+                        android:layout_height="70sp"
                         tools:srcCompat="@tools:sample/avatars" />
 
                     <TextView

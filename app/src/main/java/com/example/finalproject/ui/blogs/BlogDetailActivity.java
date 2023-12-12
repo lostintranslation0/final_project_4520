@@ -50,6 +50,8 @@ public class BlogDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog_detail);
+        getSupportActionBar().setTitle("Blogs");
+
 
         Intent intent = getIntent();
         currUser = intent.getStringExtra("USERNAME");
@@ -212,4 +214,6 @@ public class BlogDetailActivity extends AppCompatActivity {
                 });
         builder.create().show();
     }
+
+
 }
