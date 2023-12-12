@@ -16,6 +16,12 @@
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".ui.profile.ViewFollowersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.profile.ViewPublicProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ViewProfileActivity"
             android:exported="false" />
         <activity
