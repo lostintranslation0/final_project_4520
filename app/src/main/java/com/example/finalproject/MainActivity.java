@@ -2,10 +2,15 @@ package com.example.finalproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
                                         for (QueryDocumentSnapshot d : task.getResult())
                                         {
                                             String uname = (String)d.getData().get("username");
+
+                                            // Request notification permission for Android 13 and above
+                                            if (!hasNotificationPermission()) {
+                                                requestNotificationPermission();
+                                            }
                                             configureReceiver(uname);
                                             startService();
                                             Toast.makeText(MainActivity.this, "Login successful",
@@ -117,5 +127,18 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MyService.class);
         startService(intent);
+    }
+
+    private boolean hasNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+        }
+        return true; // Below Android 13, this permission is not required
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 2);
+        }
     }
 }
