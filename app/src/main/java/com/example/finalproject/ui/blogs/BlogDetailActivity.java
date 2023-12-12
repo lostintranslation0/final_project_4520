@@ -13,9 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalproject.R;
+import com.example.finalproject.User;
 import com.example.finalproject.ui.profile.ViewPublicProfileActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +40,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 
     Button viewAuthorButton;
     Button addCommentButton;
+    private ImageView blogImageProfile;
 
     RecyclerView recyclerView;
     CommentAdapter adapter;
@@ -105,6 +109,8 @@ public class BlogDetailActivity extends AppCompatActivity {
                         });
                 builder.create().show();
             }
+
+
         });
 
         viewAuthorButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +123,38 @@ public class BlogDetailActivity extends AppCompatActivity {
             }
         });
 
+        blogImageProfile = findViewById(R.id.blogImageProfile);
+
+        // Load the profile image
+        loadProfileImage(blog.getUserWhoCreated());
+
     }
+
+    private void loadProfileImage(String username) {
+        FirebaseFirestore.getInstance().collection("users")
+                .document(username)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            User user = document.toObject(User.class);
+                            if (user != null && user.getImageUrl() != null && !user.getImageUrl().isEmpty()) {
+                                Glide.with(this)
+                                        .load(user.getImageUrl())
+                                        .placeholder(R.drawable.default_profile_image)
+                                        .error(R.drawable.default_profile_image)
+                                        .into(blogImageProfile);
+                            } else {
+                                blogImageProfile.setImageResource(R.drawable.default_profile_image);
+                            }
+                        }
+                    } else {
+                        Log.e("BlogDetailActivity", "Error getting user data: ", task.getException());
+                    }
+                });
+    }
+
 
     private void refreshComments()
     {
@@ -149,6 +186,11 @@ public class BlogDetailActivity extends AppCompatActivity {
         editText.setHint("Enter reply");
         AlertDialog.Builder builder = new AlertDialog.Builder(BlogDetailActivity.this)
                 .setTitle("Add reply")
+
+
+
+
+
                 .setView(editText)
                 .setPositiveButton("Post Reply", new DialogInterface.OnClickListener() {
                     @Override

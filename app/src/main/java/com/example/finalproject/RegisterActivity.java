@@ -75,8 +75,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = passwordEditText.getText().toString();
                 String ageText = ageEditText.getText().toString();
 
-                // check if any user exists with display name already
-
                 try {
                     FirebaseFirestore.getInstance().collection("users").whereEqualTo("username", displayName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override

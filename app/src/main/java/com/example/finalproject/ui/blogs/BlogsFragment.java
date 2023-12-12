@@ -7,18 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.finalproject.HomeActivity;
 import com.example.finalproject.R;
+import com.example.finalproject.User;
 import com.example.finalproject.databinding.FragmentBlogsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -63,7 +68,7 @@ public class BlogsFragment extends Fragment {
     private void onBlogClicked(Blog blog) {
         Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
         intent.putExtra("USERNAME", currUser);
-        intent.putExtra("BLOG_DATA", blog); // Make sure Article is Serializable or Parcelable
+        intent.putExtra("BLOG_DATA", blog);
         startActivity(intent);
     }
 
@@ -108,4 +113,13 @@ public class BlogsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // Set the ActionBar title
+        if (getActivity() != null) {
+            getActivity().setTitle("Blogs");
+        }
+    }
+
 }

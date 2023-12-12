@@ -8,145 +8,115 @@
 
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="74dp"
-                android:layout_height="73dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="wrap_content"
-                android:layout_height="81dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/blogTitleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Title"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/blogImageProfile"
+                        android:layout_width="100sp"
+                        android:layout_height="100sp"
+                        tools:srcCompat="@tools:sample/avatars" />
 
                     <LinearLayout
+                        android:id="@+id/linearLayout2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/blogTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Title"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
                         <TextView
                             android:id="@+id/blogAuthorTextView"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Author" />
+                            android:text="Author"
+                            android:textSize="18sp" />
 
-                        <Button
-                            android:id="@+id/viewAuthorButton"
-                            android:layout_width="144dp"
+                        <TextView
+                            android:id="@+id/blogDateTextView2"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="View Author" />
+                            android:text="Date"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/blogDescTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Blog Description"
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/blogDateTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Date" />
+                            android:text="Date"
+                            android:textSize="18sp" />
+
+                        <Button
+                            android:id="@+id/viewAuthorButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="View Author" />
+
                     </LinearLayout>
+                </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/blogContentTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/blogCommentRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/blogDescTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Blog Description"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/commentsLabelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comments"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <Button
+                    android:id="@+id/addCommentButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Comment" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/blogContentTextView"
-                android:layout_width="188dp"
-                android:layout_height="252dp"
-                android:layout_marginTop="32dp"
-                android:gravity="center"
-                android:text="Content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/blogCommentRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="140dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/blogContentTextView" />
-
-            <TextView
-                android:id="@+id/commentsLabelTextView"
-                android:layout_width="160dp"
-                android:layout_height="39dp"
-                android:layout_marginBottom="6dp"
-                android:text="Comments"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintBottom_toTopOf="@+id/blogCommentRecyclerView"
-                app:layout_constraintEnd_toStartOf="@+id/addCommentButton"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <Button
-                android:id="@+id/addCommentButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Comment"
-                app:layout_constraintBottom_toTopOf="@+id/blogCommentRecyclerView"
-                app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
